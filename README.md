@@ -1,6 +1,6 @@
 # Jekyll IS Backpusher
 
-Composite GitHub Action to commit and push changes back to repository after Jekyll build or other generation steps. Includes optional Telegram notifications with git diff summary. Uses `github-actions[bot]` for traceable commits.[7]
+Composite GitHub Action to commit and push changes back to repository after Jekyll build or other generation steps. Includes optional Telegram notifications with git diff summary. Uses `github-actions[bot]` for traceable commits.
 
 ## Features
 
@@ -13,7 +13,7 @@ Composite GitHub Action to commit and push changes back to repository after Jeky
 
 ## Prerequisites
 
-Action assumes prior `actions/checkout@v4` with write permissions. Repository must allow pushes from `github-actions[bot]` (default for most repos). For protected branches, enable "Allow GitHub Actions to create and approve pull requests".[23]
+Action assumes prior `actions/checkout@v4` with write permissions. Repository must allow pushes from `github-actions[bot]` (default for most repos). For protected branches, enable "Allow GitHub Actions to create and approve pull requests".
 
 ## Usage
 
@@ -60,7 +60,7 @@ Store `TELEGRAM_BOT_TOKEN` and `TELEGRAM_USER_ID` as repository secrets.
 
 ## Outputs
 
-Currently none. Future versions may add `changes-detected: true/false`.[7]
+Currently none. Future versions may add `changes-detected: true/false`.
 
 ## Example Workflow (Jekyll)
 
