@@ -1,4 +1,6 @@
 # Jekyll IS Backpusher
+[![GitHub License](https://img.shields.io/github/license/jekyll-is/action-jekyll-is-backpush)](LICENSE)
+[![GitHub release](https://img.shields.io/github/v/release/jekyll-is/action-jekyll-is-backpush?logo=github)](https://github.com/jekyll-is/action-jekyll-is-backpush/releases/latest)
 
 Composite GitHub Action to commit and push changes back to repository after Jekyll build or other generation steps. Includes optional Telegram notifications with git diff summary. Uses `github-actions[bot]` for traceable commits.
 
