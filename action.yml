@@ -1,0 +1,53 @@
+name: Jekyll IS Backpusher
+
+description: Push changes back to repo after build or other action
+
+branding:
+  icon: 'corner-up-left'
+  color: 'orange'
+
+inputs:
+  label: 
+    description: Text label for commit messages and notifications
+    required: true
+  telegram-bot-token:
+    description: Telegram bot token for notification
+    required: false
+  telegram-user-id:
+    description: Telegram user ID for notification
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Commit & Push
+      shell: bash
+      env:
+        LABEL: ${{ inputs.label }}
+        TG_TOKEN: ${{ inputs.telegram-bot-token }}
+        TG_USER_ID: ${{ inputs.telegram-user-id }}
+      run: |
+        set -euo pipefail
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add .
+        if git diff --cached --quiet; then
+          echo "No changes. Nothing to do."
+        else
+          MSG="Backpushing by ${LABEL} @ $(date)"
+          MESSAGE=$(git status --short | sed 's/\\/\\\\/g; s/"/\\"/g; s/[_*[\]()~`>#+\-=|{}.!]/\\&/g')
+          git commit -m "$MSG"
+          git push
+          if [ -n "$TG_TOKEN" ] && [ -n "$TG_USER_ID" ]; then
+            NEWLINE=$'\n'
+            SHOW=$(git show --pretty="" --name-status HEAD)
+            SHOW_LINES=$(echo "$SHOW" | wc -l)
+            if [ "$SHOW_LINES" -gt 20 ]; then
+              SHOW="$(echo "$SHOW" | head -20)$NEWLINE..."
+            fi
+            TEXT=$(echo "${MSG}${NEWLINE}${NEWLINE}${SHOW_LINES} file\(\-s\) changed:${NEWLINE}\`\`\`git${NEWLINE}${SHOW}${NEWLINE}\`\`\`${NEWLINE}" | sed 's/\\/\\\\/g; s/"/\\"/g; s/[_*[\]()~`>#+\-=|{}.!]/\\&/g')
+            JSON="{\"chat_id\":\"$TG_USER_ID\",\"text\":\"$TEXT\",\"parse_mode\":\"MarkdownV2\"}"
+            curl -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" -H "Content-Type: application/json" -d "${JSON}"
+          fi
+        fi
+        
